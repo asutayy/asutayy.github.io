@@ -29,5 +29,48 @@
 </head>
 <body>
 	<script src="master-loader.js"></script>		
+<script>
+  // Global olarak yakalayacağımız sunucu bağlantısı
+  window.aktifOyunSoketi = null;
+
+  // Tarayıcının orijinal WebSocket yapısını kopyalıyoruz
+  const OrijinalWS = window.WebSocket;
+
+  // WebSocket'i kendi kodumuzla manipüle ediyoruz
+  window.WebSocket = function(url, protocols) {
+    const ws = new OrijinalWS(url, protocols);
+    
+    // Bağlantı kurulduğu an yakala
+    ws.addEventListener('open', function() {
+      console.log("🤖 Canlı WebSocket bağlantısı başarıyla yakalandı!");
+      window.aktifOyunSoketi = ws;
+    });
+    
+    return ws;
+  };
+
+  // HERKESİN GÖRECEĞİ GLOBAL BOT FONKSİYONU
+  function globalChateBotMesajiGonder(mesajMetni) {
+    if (window.aktifOyunSoketi && window.aktifOyunSoketi.readyState === 1) {
+      
+      // Combat Online v18 sunucusunun kabul ettiği paket şablonu
+      var paket = JSON.stringify({
+        action: "chat",
+        message: mesajMetni
+      });
+      
+      // Mesajı doğrudan Poki'nin resmi canlı sunucusuna enjekte ediyoruz
+      window.aktifOyunSoketi.send(paket);
+      console.log("📢 Global sunucuya otobot mesajı gönderildi: " + mesajMetni);
+    } else {
+      console.log("Sunucu bağlantısı henüz hazır değil, odaya girilmesi bekleniyor...");
+    }
+  }
+
+  // Odaya girdikten sonra her 25 saniyede bir Poki'deki HERKESİN göreceği mesajı atar
+  setInterval(function() {
+    globalChateBotMesajiGonder("HOSGELDINIZ REY BEY");
+  }, 25000); // 25 saniye Poki'nin spam korumasına yakalanmamak için en güvenli süredir
+</script>
 </body>
 </html>
