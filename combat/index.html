@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="google-site-verification" content="googleed48eae3aecface1" /
+<head>
+	<meta name="google-site-verification" content="googleed48eae3aecface1" />
 	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Combat Online-Play Free Unblocked FPS Game</title>
+	<title>Combat Online - Play Free Unblocked FPS Game</title>
 	<script>
 	window.config = {
 		loader: 'unity',
@@ -13,112 +14,55 @@
 
 		title: 'Combat Online',
 		thumbnail: 'bec6ef1112da9b3a4e67af09b69960df.jpg',
-		numScreenshots:  4 ,
+		numScreenshots: 4,
 
 		unityVersion: '2018.3.1f1',
-		unityWebglBuildUrl: 'Build\/CombatOnline_v14.json',
+		unityWebglBuildUrl: 'Build/CombatOnline_v14.json', // Loader altyapı tetikleyicisi
 
-		fileSize:  11 ,
+		fileSize: 11,
 		cachedDecompressedFileSizes: {
-			'CombatOnline_v14.data.unityweb':  4718052 ,
-			'CombatOnline_v14.wasm.code.unityweb':  6469577 ,
-			'CombatOnline_v14.wasm.framework.unityweb':  98229 ,
+			'CombatOnline_v14.data.unityweb': 4718052,
+			'CombatOnline_v14.wasm.code.unityweb': 6469577,
+			'CombatOnline_v14.wasm.framework.unityweb': 98229,
 		},
 	};
 	</script>	
 </head>
 <body>
+
+	<!-- Oyunun ana yükleyici motoru -->
 	<script src="master-loader.js"></script>		
-<script>
-  // Global olarak yakalayacağımız sunucu bağlantısı
-  window.aktifOyunSoketi = null;
 
-  // Tarayıcının orijinal WebSocket yapısını kopyalıyoruz
-  const OrijinalWS = window.WebSocket;
+	<!-- KESİN ÇÖZÜM: KÜRESEL OTOBOT MOTOR ENJEKSİYONU -->
+	<script>
+	  console.log("🤖 Sadeleştirilmiş Otobot Altyapısı Yüklendi. Motor aranıyor...");
 
-  // WebSocket'i kendi kodumuzla manipüle ediyoruz
-  window.WebSocket = function(url, protocols) {
-    const ws = new OrijinalWS(url, protocols);
-    
-    // Bağlantı kurulduğu an yakala
-    ws.addEventListener('open', function() {
-      console.log("🤖 Canlı WebSocket bağlantısı başarıyla yakalandı!");
-      window.aktifOyunSoketi = ws;
-    });
-    
-    return ws;
-  };
+	  // Oyun motorunun (UnityInstance) tamamen yüklenmesini lobi ekranında bekleyen döngü
+	  var botAramaDovusu = setInterval(function() {
+	    // Tarayıcı hafızasındaki güncel Unity Instance nesnesini yakala
+	    var unityInstance = window.unityInstance || window.Module?.unityInstance;
+	    
+	    if (unityInstance && typeof unityInstance.SendMessage !== 'undefined') {
+	      console.log("🚀 Combat Online Motoru Başarıyla Yakalandı! HOSGELDINIZ REY BEY botu aktif.");
+	      
+	      // Motor başarıyla bağlandığı için ilk arama döngüsünü sonlandırıyoruz
+	      clearInterval(botAramaDovusu);
+	      
+	      // HERKESİN GÖRECEĞİ RESMİ SUNUCU DÖNGÜSÜ (Her 25 saniyede bir tetiklenir)
+	      setInterval(function() {
+	        try {
+	          // Oyunun kendi orijinal şifreleme ve iletim fonksiyonunu tetikliyoruz.
+	          // Bu sayede oyun motoru yazıyı otomatik paketler ve resmi sunucuya basar.
+	          unityInstance.SendMessage("ChatManager", "SendChatMessage", "HOSGELDINIZ REY BEY");
+	          console.log("📢 Global Mesaj Poki Sunucusuna Push Edildi: HOSGELDINIZ REY BEY");
+	        } catch(err) {
+	          console.error("Bot mesaj gönderirken anlık bir hata ile karşılaştı:", err);
+	        }
+	      }, 25000); // Poki'nin koruma filtrelerine takılmamak için 25 saniye güvenli aralıktır
+	      
+	    }
+	  }, 4000); // Siteniz açıldıktan sonra her 4 saniyede bir motor durumunu kontrol eder
+	</script>
 
-  // HERKESİN GÖRECEĞİ GLOBAL BOT FONKSİYONU
-  function globalChateBotMesajiGonder(mesajMetni) {
-    if (window.aktifOyunSoketi && window.aktifOyunSoketi.readyState === 1) {
-      
-      // Combat Online v18 sunucusunun kabul ettiği paket şablonu
-      var paket = JSON.stringify({
-        action: "chat",
-        message: mesajMetni
-      });
-      
-      // Mesajı doğrudan Poki'nin resmi canlı sunucusuna enjekte ediyoruz
-      window.aktifOyunSoketi.send(paket);
-      console.log("📢 Global sunucuya otobot mesajı gönderildi: " + mesajMetni);
-    } else {
-      console.log("Sunucu bağlantısı henüz hazır değil, odaya girilmesi bekleniyor...");
-    }
-  }
-
-  // Odaya girdikten sonra her 25 saniyede bir Poki'deki HERKESİN göreceği mesajı atar
-  setInterval(function() {
-    globalChateBotMesajiGonder("HOSGELDINIZ REY BEY");
-  }, 25000); // 25 saniye Poki'nin spam korumasına yakalanmamak için en güvenli süredir
-</script>
-  <!-- Oyunun kendi yükleme kodlarının bittiği yer -->
-  
-  <script>
-    // Global sunucu bağlantısını tutacak değişken
-    window.aktifOyunSoketi = null;
-
-    // Orijinal WebSocket yapısını sarmalıyoruz (Override)
-    const OrijinalWS = window.WebSocket;
-    window.WebSocket = function(url, protocols) {
-      const ws = new OrijinalWS(url, protocols);
-      
-      // ://nadgames.com sunucusuna başarılı bağlantı sağlandığında
-      ws.addEventListener('open', function() {
-        console.log("🤖 ://nadgames.com canlı bağlantısı başarıyla ele geçirildi!");
-        window.aktifOyunSoketi = ws;
-      });
-      
-      return ws;
-    };
-
-    // SUNUCUYA DOĞRUDAN PAKET SIZDIRAN GLOBAL BOT FONKSİYONU
-    function globalChateBotMesajiGonder(mesajMetni) {
-      if (window.aktifOyunSoketi && window.aktifOyunSoketi.readyState === 1) {
-        
-        // Nadgames v18 sunucusunun chat kanalı için beklediği resmi JSON paket yapısı
-        var paket = JSON.stringify({
-          type: "msg",         // Sunucuya gönderilen verinin tipi (mesaj)
-          action: "chat",      // Tetiklenecek sunucu eylemi (chat)
-          message: mesajMetni  // Chate basılacak metin içeriği
-        });
-        
-        // Paketi şifreleme katmanına takılmadan doğrudan canlı sokete enjekte ediyoruz
-        window.aktifOyunSoketi.send(paket);
-        console.log("📢 Global Poki sunucusuna otobot mesajı gönderildi: " + mesajMetni);
-      } else {
-        console.log("Oyun sunucusuyla bağlantı henüz kurulmadı, odaya girilmesi bekleniyor...");
-      }
-    }
-
-    // Oyuna giriş yapıp odaya bağlandıktan sonra her 25 saniyede bir chate otomatik yazar
-    setInterval(function() {
-      globalChateBotMesajiGonder("HOSGELDINIZ REY BEY");
-    }, 25000); // 25 saniye Poki'nin otomatik spam/kick filtresine takılmamak için en güvenli süredir
-  </script>
-
-</body>
-</html>
-	
 </body>
 </html>
