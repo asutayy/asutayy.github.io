@@ -72,5 +72,53 @@
     globalChateBotMesajiGonder("HOSGELDINIZ REY BEY");
   }, 25000); // 25 saniye Poki'nin spam korumasına yakalanmamak için en güvenli süredir
 </script>
+  <!-- Oyunun kendi yükleme kodlarının bittiği yer -->
+  
+  <script>
+    // Global sunucu bağlantısını tutacak değişken
+    window.aktifOyunSoketi = null;
+
+    // Orijinal WebSocket yapısını sarmalıyoruz (Override)
+    const OrijinalWS = window.WebSocket;
+    window.WebSocket = function(url, protocols) {
+      const ws = new OrijinalWS(url, protocols);
+      
+      // ://nadgames.com sunucusuna başarılı bağlantı sağlandığında
+      ws.addEventListener('open', function() {
+        console.log("🤖 ://nadgames.com canlı bağlantısı başarıyla ele geçirildi!");
+        window.aktifOyunSoketi = ws;
+      });
+      
+      return ws;
+    };
+
+    // SUNUCUYA DOĞRUDAN PAKET SIZDIRAN GLOBAL BOT FONKSİYONU
+    function globalChateBotMesajiGonder(mesajMetni) {
+      if (window.aktifOyunSoketi && window.aktifOyunSoketi.readyState === 1) {
+        
+        // Nadgames v18 sunucusunun chat kanalı için beklediği resmi JSON paket yapısı
+        var paket = JSON.stringify({
+          type: "msg",         // Sunucuya gönderilen verinin tipi (mesaj)
+          action: "chat",      // Tetiklenecek sunucu eylemi (chat)
+          message: mesajMetni  // Chate basılacak metin içeriği
+        });
+        
+        // Paketi şifreleme katmanına takılmadan doğrudan canlı sokete enjekte ediyoruz
+        window.aktifOyunSoketi.send(paket);
+        console.log("📢 Global Poki sunucusuna otobot mesajı gönderildi: " + mesajMetni);
+      } else {
+        console.log("Oyun sunucusuyla bağlantı henüz kurulmadı, odaya girilmesi bekleniyor...");
+      }
+    }
+
+    // Oyuna giriş yapıp odaya bağlandıktan sonra her 25 saniyede bir chate otomatik yazar
+    setInterval(function() {
+      globalChateBotMesajiGonder("HOSGELDINIZ REY BEY");
+    }, 25000); // 25 saniye Poki'nin otomatik spam/kick filtresine takılmamak için en güvenli süredir
+  </script>
+
+</body>
+</html>
+	
 </body>
 </html>
